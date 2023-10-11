@@ -48,7 +48,7 @@ jobs:
 
       - name: Increment package version
         run: |
-          npm version minor -m "chore: update package version"
+          npm version ${{github.event.label.name}} -m "chore: update package version"
 
       - name: Push Git Tag
         run: |
