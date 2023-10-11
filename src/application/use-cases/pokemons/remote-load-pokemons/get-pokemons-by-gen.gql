@@ -1,0 +1,41 @@
+query GetPokemonsByGen($generation: Int!) {
+  pokemons: pokemon_v2_pokemonspecies(
+    order_by: { id: asc }
+    where: { pokemon_v2_generation: { id: { _eq: $generation } } }
+  ) {
+    data: pokemon_v2_pokemons {
+      types: pokemon_v2_pokemontypes {
+        data: pokemon_v2_type {
+          name
+        }
+      }
+      abilities: pokemon_v2_pokemonabilities {
+        data: pokemon_v2_ability {
+          name
+        }
+      }
+      stats: pokemon_v2_pokemonstats {
+        base_stat
+        data: pokemon_v2_stat {
+          name
+        }
+      }
+      name
+      id
+      height
+      weight
+    }
+    chain: pokemon_v2_evolutionchain {
+      evolves_to: pokemon_v2_pokemonspecies(order_by: { id: asc }) {
+        id
+        name
+        evolution: pokemon_v2_pokemonevolutions {
+          min_level
+          move: pokemon_v2_move {
+            name
+          }
+        }
+      }
+    }
+  }
+}

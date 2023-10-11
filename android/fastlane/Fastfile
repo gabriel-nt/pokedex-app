@@ -1,0 +1,70 @@
+default_platform(:android)
+
+platform :android do
+  before_all do
+    Dotenv.load "./envs/.env.android"
+  end
+
+  desc 'Update the version code and version name'
+  private_lane :android_versioning do |params|
+    gradle_file = "app/build.gradle"
+
+    version_name = android_get_version_name(
+      gradle_file: gradle_file
+    )
+
+    version_array = version_name.split(".").map(&:to_i)
+
+    case params[:bump_type]
+      when "patch"
+        version_array[2] += 1
+      when "minor"
+        version_array[1] += 1
+        version_array[2] = 0
+      when "major"
+        version_array[0] += 1
+        version_array[1] = 0
+        version_array[2] = 0
+    end
+      
+    version_name = version_array.join(".")
+
+    android_set_version_name(
+      version_name: version_name,
+      gradle_file: gradle_file
+    )
+
+    android_set_version_code(
+      gradle_file: gradle_file
+    )
+  end
+
+  desc 'Build the Apk Android app'
+  lane :build_apk do
+    gradle(task: 'clean', project_dir: './')
+    gradle(task: 'assemble', build_type: 'release', project_dir: './')
+  end
+
+  desc 'Build the Bundle Android app'
+  lane :build_bundle do |params|
+    android_versioning(params)
+    gradle(task: 'clean', project_dir: './')
+    gradle(
+      task: 'bundle', 
+      build_type: 'release', 
+      project_dir: './', 
+      properties: {
+        "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["KEY_PASSWORD"],
+      } 
+    )
+  end
+
+  desc "Deploy a new aplha version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store(track: 'alpha', json_key_file: ENV["ANDROID_JSON_KEY_FILE"])
+  end
+end

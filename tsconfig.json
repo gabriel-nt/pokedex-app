@@ -1,0 +1,16 @@
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "@/main/*": ["main/*"],
+      "@/domain/*": ["domain/*"],
+      "@/application/*": ["application/*"],
+      "@/presentation/*": ["presentation/*"],
+      "@/infrastructure/*": ["infrastructure/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "babel.config.js"]
+}
