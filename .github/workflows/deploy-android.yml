@@ -43,12 +43,12 @@ jobs:
           fileName: 'android_keystore.keystore'
           encodedString: ${{ secrets.KEYSTORE_FILE }}
 
-      # - name: Install Fastlane
-      #   run: gem install fastlane
+      - name: Install Fastlane
+        run: gem install fastlane
 
-      # - name: Add Fastlane Plugins
-      #   run: |
-      #     fastlane add_plugin versioning_android
+      - name: Add Fastlane Plugins
+        run: |
+          fastlane add_plugin versioning_android
 
       - name: Build Android Release
         run: |
