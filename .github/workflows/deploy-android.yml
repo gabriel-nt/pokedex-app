@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: 16
 
+      - name: Navigate to Android folder
+        run: cd android
+
       - name: Set up Ruby env
         uses: ruby/setup-ruby@v1
         with:
@@ -42,7 +45,6 @@ jobs:
 
       - name: Build Android Release
         run: |
-          cd android &
           bundle exec fastlane build_bundle bump_type="${{github.event.pull_request.labels.*.name}}"
         env:
           KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
