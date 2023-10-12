@@ -33,7 +33,7 @@ jobs:
 
       - name: Echo label
         run: |
-          echo "$GITHUB_CONTEXT"
+          echo ${{ github.workspace }}
           echo ${{github.event.pull_request.labels.*.name}}
 
       - name: Decode Keystore File
@@ -42,6 +42,13 @@ jobs:
         with:
           fileName: 'android_keystore.keystore'
           encodedString: ${{ secrets.KEYSTORE_FILE }}
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Add Fastlane Plugins
+        run: |
+          fastlane add_plugin versioning_android
 
       - name: Build Android Release
         run: |
