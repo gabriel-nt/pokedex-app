@@ -12,6 +12,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == false
+    defaults:
+      run:
+        working-directory: ./android
 
     steps:
       - name: Checkout to git repository
@@ -21,9 +24,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - name: Navigate to Android folder
-        run: cd android
 
       - name: Set up Ruby env
         uses: ruby/setup-ruby@v1
