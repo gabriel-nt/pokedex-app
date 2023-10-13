@@ -1,8 +1,10 @@
 default_platform(:android)
 
 platform :android do
-  before_all do
-    Dotenv.load "./envs/.env.android"
+  before_all do |lane, params|
+    if params[:local_env]
+      Dotenv.overload ".env.android"
+    end
   end
 
   desc 'Update the version code and version name'
