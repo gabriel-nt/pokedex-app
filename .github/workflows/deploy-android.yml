@@ -40,25 +40,28 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      # - name: Install Fastlane
-      #   run: gem install fastlane
-
-      # - name: Add Fastlane Plugins
-      #   run: |
-      #     fastlane add_plugin versioning_android
-
-      - name: Decode Keystore File
-        uses: timheuer/base64-to-file@v1
-        id: android_keystore
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
         with:
-          fileName: 'android_keystore.keystore'
-          encodedString: ${{ secrets.KEYSTORE_FILE }}
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+
+      - name: Setup Keystore File
+        run: echo "${{secrets.KEYSTORE_FILE}}" | base64 -d > "${{ github.workspace }}/production.keystore"
 
       - name: Build Android Release
         run: |
           bundle exec fastlane android build_bundle bump_type:"patch" local_env:false
         env:
-          KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+          KEYSTORE_FILE: '${{ github.workspace }}/production.keystore'
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
