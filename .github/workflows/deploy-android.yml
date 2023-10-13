@@ -44,9 +44,7 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE_FILE }}
 
       - name: Make gradlew executable
-        run: |
-          cd android &&
-          chmod +x ./gradlew
+        run: chmod +x ./gradlew
 
       - name: Install Fastlane
         run: gem install fastlane
