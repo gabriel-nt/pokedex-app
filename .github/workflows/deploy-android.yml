@@ -31,10 +31,21 @@ jobs:
           ruby-version: 3.2.2
           bundler-cache: true
 
-      - name: Echo label
-        run: |
-          echo ${{ github.workspace }}
-          echo ${{github.event.pull_request.labels.*.name}}
+      - name: Install Ruby dependencies
+        run: bundle install
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # - name: Install Fastlane
+      #   run: gem install fastlane
+
+      # - name: Add Fastlane Plugins
+      #   run: |
+      #     fastlane add_plugin versioning_android
 
       - name: Decode Keystore File
         uses: timheuer/base64-to-file@v1
@@ -42,16 +53,6 @@ jobs:
         with:
           fileName: 'android_keystore.keystore'
           encodedString: ${{ secrets.KEYSTORE_FILE }}
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Install Fastlane
-        run: gem install fastlane
-
-      - name: Add Fastlane Plugins
-        run: |
-          fastlane add_plugin versioning_android
 
       - name: Build Android Release
         run: |
