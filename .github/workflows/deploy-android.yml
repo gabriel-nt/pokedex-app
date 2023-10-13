@@ -52,7 +52,7 @@ jobs:
 
       - name: Build Android Release
         run: |
-          bundle exec fastlane build_bundle bump_type="patch"
+          bundle exec fastlane android build_bundle bump_type="patch"
         env:
           KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
