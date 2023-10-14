@@ -68,13 +68,13 @@ jobs:
 
       - name: Increment package version
         run: |
-          npm version ${{github.event.pull_request.labels.*.name}} -m "chore: update package version"
+          npm version patch -m "chore: update package version"
 
-      - name: Push Git Tag
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git push origin $NEW_TAG
+      # - name: Push Git Tag
+      #   run: |
+      #     git config user.name "GitHub Actions"
+      #     git config user.email "<>"
+      #     git push origin $NEW_TAG
 
       - name: Commit and push version change
         uses: stefanzweifel/git-auto-commit-action@v4
