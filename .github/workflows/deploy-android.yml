@@ -58,6 +58,7 @@ jobs:
         run: echo "${{secrets.KEYSTORE_FILE}}" | base64 -d > "${{ github.workspace }}/production.keystore"
 
       - name: Build Android Release
+        if: false
         run: |
           bundle exec fastlane android build_bundle bump_type:"patch" local_env:false
         env:
