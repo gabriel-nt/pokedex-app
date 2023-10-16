@@ -68,18 +68,17 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Commit and push version change
+        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          file_pattern: '*.gradle'
           commit_message: 'chore: update version code and version name'
 
       - name: Increment package version
         run: |
-          npm version patch -m "chore: update package version"
-
-      - name: Push Git Tag
-        run: |
           git config user.name "GitHub Actions"
           git config user.email "<>"
+          npm version patch -m "chore: update package version"
           git push origin --tags
 
       - name: Upload build artifacts
