@@ -66,7 +66,6 @@ jobs:
 
       - name: Echo version
         run: |
-          echo ${{ github.event.pull_request.head.repo.url }}
           echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
@@ -91,7 +90,6 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin --tags
 
       - name: Upload build artifacts
