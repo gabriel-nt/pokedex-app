@@ -90,7 +90,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git push origin --follow-tags
+          git push "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" "${{ github.head_ref }}" --follow-tags
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
