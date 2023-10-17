@@ -64,8 +64,10 @@ jobs:
           echo "version=${{ contains(github.event.pull_request.labels.*.name, 'minor') && 'minor' }}" >> $GITHUB_OUTPUT
           echo "version=${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }}" >> $GITHUB_OUTPUT
 
+      - name: Echo version
+        run: echo ${{ steps.extract_label.outputs.version }}
+
       - name: Build Android Release
-        if: false
         run: |
           bundle exec fastlane android build_bundle bump_type:"${{ steps.extract_label.outputs.version }}" local_env:false
         env:
@@ -75,7 +77,6 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Commit and push version change
-        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           file_pattern: '*.gradle'
