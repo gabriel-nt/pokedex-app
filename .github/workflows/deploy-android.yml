@@ -66,10 +66,11 @@ jobs:
 
       - name: Echo version
         run: |
-          echo ${{ github.ref_name }}
+          echo ${{ github.event.pull_request.base.ref }}
           echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
+        if: false
         run: |
           bundle exec fastlane android build_bundle bump_type:"${{ steps.extract_label.outputs.version }}" local_env:false
         env:
@@ -79,6 +80,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Commit and push version change
+        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           file_pattern: '*.gradle'
@@ -89,7 +91,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git push origin ${{ github.ref_name }} --tags
+          git push origin ${{ github.event.pull_request.base.ref }} --tags
 
       - name: Commit and push package version
         uses: stefanzweifel/git-auto-commit-action@v4
