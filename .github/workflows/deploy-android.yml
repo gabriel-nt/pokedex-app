@@ -65,7 +65,9 @@ jobs:
           echo "version=${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }}" >> $GITHUB_OUTPUT
 
       - name: Echo version
-        run: echo ${{ steps.extract_label.outputs.version }}
+        run: |
+          echo ${{ github.ref_name }}
+          echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
         run: |
@@ -87,7 +89,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git push origin --tags
+          git push origin ${{ github.ref_name }} --tags
 
       - name: Commit and push package version
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -100,4 +102,4 @@ jobs:
         with:
           name: assets
           path: |
-            ${{ github.workspace }}/app/build/outputs/bundle/release
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release
