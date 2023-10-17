@@ -87,11 +87,11 @@ jobs:
           commit_message: 'chore: update version code and version name'
 
       - name: Increment package version
-        if: false
         run: |
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
+          git remote add origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin --tags
 
       - name: Upload build artifacts
