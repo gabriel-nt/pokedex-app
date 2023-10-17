@@ -66,7 +66,7 @@ jobs:
 
       - name: Echo version
         run: |
-          echo ${{ github.event.pull_request.head.ref }}
+          echo ${{ github.event.pull_request.head.repo }}
           echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
@@ -87,20 +87,16 @@ jobs:
           commit_message: 'chore: update version code and version name'
 
       - name: Increment package version
+        if: false
         run: |
           git config user.name "GitHub Actions"
           git config user.email "<>"
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git push origin ${{ github.event.pull_request.head.ref }} --tags
-
-      - name: Commit and push package version
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          file_pattern: 'package.json'
-          commit_message: 'chore: update package'
+          git push origin --tags
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
+        if: false
         with:
           name: assets
           path: |
