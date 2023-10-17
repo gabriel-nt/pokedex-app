@@ -86,11 +86,34 @@ jobs:
           commit_message: 'chore: update version code and version name'
 
       - name: Increment package version
+        id: extract_tag_version
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "<>"
-          npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
-          git push "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" "${{ github.head_ref }}" --follow-tags
+          echo "tag_version=npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version" >> $GITHUB_OUTPUT
+
+      - name: Echo version
+        run: |
+          git show
+          echo ${{ steps.extract_tag_version.outputs.tag_version }}
+
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            TAG=${{ steps.extract_tag_version.outputs.tag_version }}//v/
+            echo TAG
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${TAG}',
+              sha: context.sha
+            })
+
+      - name: Commit and push package version
+        if: false
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: 'package.json package.lock'
+          commit_message: 'chore: update package version'
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
