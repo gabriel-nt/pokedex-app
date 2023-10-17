@@ -55,6 +55,7 @@ platform :android do
       task: 'bundle', 
       build_type: 'release', 
       project_dir: './', 
+      print_command_output: false,
       properties: {
         "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
         "android.injected.signing.store.password" => ENV["KEY_PASSWORD"],
