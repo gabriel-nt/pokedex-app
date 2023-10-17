@@ -57,10 +57,17 @@ jobs:
       - name: Setup Keystore File
         run: echo "${{secrets.KEYSTORE_FILE}}" | base64 -d > "${{ github.workspace }}/production.keystore"
 
+      - name: Extract label version
+        id: extract_label
+        run: |
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'major') && 'major' }}" >> $GITHUB_OUTPUT
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'minor') && 'minor' }}" >> $GITHUB_OUTPUT
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }}" >> $GITHUB_OUTPUT
+
       - name: Build Android Release
         if: false
         run: |
-          bundle exec fastlane android build_bundle bump_type:"patch" local_env:false
+          bundle exec fastlane android build_bundle bump_type:"${{ steps.extract_label.outputs.version }}" local_env:false
         env:
           KEYSTORE_FILE: '${{ github.workspace }}/production.keystore'
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -78,8 +85,14 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "<>"
-          npm version patch -m "chore: update package version"
+          npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
           git push origin --tags
+
+      - name: Commit and push package version
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: 'package.json'
+          commit_message: 'chore: update package'
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
