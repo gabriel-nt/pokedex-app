@@ -90,23 +90,17 @@ jobs:
           commit_user_email: ${{ github.actor }}@users.noreply.github.com
           commit_message: 'chore: update version code and version name'
 
-      - name: Increment package version
-        run: |
-          npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version
-
-      - name: Commit and push package version
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: master
-          commit_user_name: ${{ github.actor }}
-          commit_user_email: ${{ github.actor }}@users.noreply.github.com
-          file_pattern: 'package.json package-lock.json'
-          commit_message: 'chore: update package version'
-
       - name: Git config
         run: |
           git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
           git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+
+      - name: Increment package version
+        run: |
+          npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
+
+      - name: Git push version bump
+        run: git push origin dev --follow-tags --force
 
       - name: Echo version
         run: |
