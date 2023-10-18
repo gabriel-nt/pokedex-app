@@ -99,7 +99,7 @@ jobs:
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
 
       - name: Git push version bump
-        run: git push origin dev --follow-tags --force
+        run: git push origin master --follow-tags --force
 
       - name: Commit and push package version
         if: false
