@@ -62,9 +62,10 @@ jobs:
       - name: Extract label version
         id: extract_label
         run: |
-          VERSION = ${{ contains(github.event.pull_request.labels.*.name, 'major') && 'major' || 'minor'}}
-          VERSION = ${{ contains(github.event.pull_request.labels.*.name, 'minor') && 'minor' }} || ${VERSION}
-          VERSION = ${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }} || ${VERSION}
+          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'major') && 'major' || 'minor'}}
+          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'minor') && 'minor' }} || ${VERSION}
+          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }} || ${VERSION}
+          echo {VERSION}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Echo version
