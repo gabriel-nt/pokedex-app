@@ -11,7 +11,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == false
+    if: github.event.pull_request.merged == true
     defaults:
       run:
         working-directory: ./android
@@ -94,7 +94,6 @@ jobs:
           npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version
 
       - name: Commit and push package version
-        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: ${{ github.actor }}
@@ -112,7 +111,7 @@ jobs:
           PACKAGE_VERSION=$(npm pkg get version)
           echo ${PACKAGE_VERSION}
           git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
-          git push origin ${PACKAGE_VERSION}
+          git push origin master ${PACKAGE_VERSION}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
