@@ -89,17 +89,16 @@ jobs:
           commit_user_email: ${{ github.actor }}@users.noreply.github.com
           commit_message: 'chore: update version code and version name'
 
-      - name: Git config
-        run: |
-          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
-          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
-
       - name: Increment package version
         run: |
-          npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
+          npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version
 
-      - name: Git push version bump
-        run: git push origin staging --follow-tags --force
+      - name: Echo version
+        run: |
+          PACKAGE_VERSION=$(npm pkg get version)
+          echo ${PACKAGE_VERSION}
+          git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
+          git push origin ${PACKAGE_VERSION}
 
       - name: Commit and push package version
         if: false
