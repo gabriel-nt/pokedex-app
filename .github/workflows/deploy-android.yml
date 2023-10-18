@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout to git repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ORG_PAT }}
 
       - name: Set up Node env
         uses: actions/setup-node@v3
@@ -83,35 +85,28 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           file_pattern: '*.gradle'
+          commit_user_name: ${{ github.actor }}
+          commit_user_email: ${{ github.actor }}@users.noreply.github.com
           commit_message: 'chore: update version code and version name'
 
+      - name: Git config
+        run: |
+          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
+          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+
       - name: Increment package version
-        id: extract_tag_version
         run: |
-          echo "tag_version=npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version" >> $GITHUB_OUTPUT
+          npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
 
-      - name: Echo version
-        run: |
-          git show
-          echo ${{ steps.extract_tag_version.outputs.tag_version }}
-
-      - name: Create tag
-        uses: actions/github-script@v5
-        with:
-          script: |
-            TAG=${{ steps.extract_tag_version.outputs.tag_version }}//v/
-            echo TAG
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${TAG}',
-              sha: context.sha
-            })
+      - name: Git push version bump
+        run: git push origin dev --follow-tags --force
 
       - name: Commit and push package version
         if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          commit_user_name: ${{ github.actor }}
+          commit_user_email: ${{ github.actor }}@users.noreply.github.com
           file_pattern: 'package.json package.lock'
           commit_message: 'chore: update package version'
 
