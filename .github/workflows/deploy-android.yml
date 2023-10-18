@@ -93,21 +93,20 @@ jobs:
         run: |
           npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version
 
-      - name: Echo version
-        run: |
-          PACKAGE_VERSION=$(npm pkg get version)
-          echo ${PACKAGE_VERSION}
-          git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
-          git push origin ${PACKAGE_VERSION}
-
       - name: Commit and push package version
-        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: ${{ github.actor }}
           commit_user_email: ${{ github.actor }}@users.noreply.github.com
           file_pattern: 'package.json package.lock'
           commit_message: 'chore: update package version'
+
+      - name: Echo version
+        run: |
+          PACKAGE_VERSION=$(npm pkg get version)
+          echo ${PACKAGE_VERSION}
+          git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
+          git push origin ${PACKAGE_VERSION}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
