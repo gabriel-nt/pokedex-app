@@ -1,8 +1,10 @@
 default_platform(:android)
 
 platform :android do
-  before_all do
-    Dotenv.load "./envs/.env.android"
+  before_all do |lane, params|
+    if params[:local_env]
+      Dotenv.overload ".env.android"
+    end
   end
 
   desc 'Update the version code and version name'
@@ -53,9 +55,10 @@ platform :android do
       task: 'bundle', 
       build_type: 'release', 
       project_dir: './', 
+      print_command_output: false,
       properties: {
         "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
-        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.store.password" => ENV["KEY_PASSWORD"],
         "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
         "android.injected.signing.key.password" => ENV["KEY_PASSWORD"],
       } 

@@ -4,18 +4,23 @@ on:
   pull_request:
     branches:
       - master
-    types: [labeled]
+    types: [synchronize]
 
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == false
+    if: github.event.pull_request.merged == true
+    defaults:
+      run:
+        working-directory: ./android
 
     steps:
       - name: Checkout to git repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ORG_PAT }}
 
       - name: Set up Node env
         uses: actions/setup-node@v3
@@ -25,45 +30,93 @@ jobs:
       - name: Set up Ruby env
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 3.2.2
           bundler-cache: true
 
-      - name: Navigate to android folder
-        run: cd android
+      - name: Install Ruby dependencies
+        run: bundle install
 
-      - name: Decode Keystore File
-        uses: timheuer/base64-to-file@v1
-        id: android_keystore
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
         with:
-          fileName: 'android_keystore.keystore'
-          encodedString: ${{ secrets.KEYSTORE_FILE }}
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+
+      - name: Setup Keystore File
+        run: echo "${{secrets.KEYSTORE_FILE}}" | base64 -d > "${{ github.workspace }}/production.keystore"
+
+      - name: Extract label version
+        id: extract_label
+        run: |
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'major') && 'major' }}" >> $GITHUB_OUTPUT
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'minor') && 'minor' }}" >> $GITHUB_OUTPUT
+          echo "version=${{ contains(github.event.pull_request.labels.*.name, 'patch') && 'patch' }}" >> $GITHUB_OUTPUT
+
+      - name: Echo version
+        run: |
+          echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
-        run: bundle exec fastlane build_bundle bump_type="${{github.event.label.name}}"
+        if: false
+        run: |
+          bundle exec fastlane android build_bundle bump_type:"${{ steps.extract_label.outputs.version }}" local_env:false
         env:
-          KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+          KEYSTORE_FILE: '${{ github.workspace }}/production.keystore'
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS}}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Increment package version
-        run: |
-          npm version ${{github.event.label.name}} -m "chore: update package version"
-
-      - name: Push Git Tag
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@users.noreply.github.com"
-          git push origin $NEW_TAG
-
       - name: Commit and push version change
+        if: false
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          file_pattern: '*.gradle'
+          commit_user_name: ${{ github.actor }}
+          commit_user_email: ${{ github.actor }}@users.noreply.github.com
           commit_message: 'chore: update version code and version name'
+
+      - name: Increment package version
+        run: |
+          npm version ${{ steps.extract_label.outputs.version }} --no-git-tag-version
+
+      - name: Commit and push package version
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_user_name: ${{ github.actor }}
+          commit_user_email: ${{ github.actor }}@users.noreply.github.com
+          file_pattern: 'package.json package-lock.json'
+          commit_message: 'chore: update package version'
+
+      - name: Git config
+        run: |
+          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
+          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+
+      - name: Echo version
+        run: |
+          PACKAGE_VERSION=$(npm pkg get version)
+          echo ${PACKAGE_VERSION}
+          git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
+          git push origin master ${PACKAGE_VERSION}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
+        if: false
         with:
           name: assets
           path: |
-            ${{ github.workspace }}/app/build/outputs/bundle/release
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release
