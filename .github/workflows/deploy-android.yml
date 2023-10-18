@@ -100,14 +100,7 @@ jobs:
           npm version ${{ steps.extract_label.outputs.version }} -m "chore: update package version"
 
       - name: Git push version bump
-        run: git push origin dev --follow-tags --force
-
-      - name: Echo version
-        run: |
-          PACKAGE_VERSION=$(npm pkg get version)
-          echo ${PACKAGE_VERSION}
-          git tag ${PACKAGE_VERSION} -m "chore: update version code and version name"
-          git push origin master v${PACKAGE_VERSION}
+        run: git push origin master --follow-tags --force
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
