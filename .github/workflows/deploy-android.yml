@@ -98,7 +98,7 @@ jobs:
         with:
           commit_user_name: ${{ github.actor }}
           commit_user_email: ${{ github.actor }}@users.noreply.github.com
-          file_pattern: 'package.json package.lock'
+          file_pattern: 'package.json package-lock.json'
           commit_message: 'chore: update package version'
 
       - name: Echo version
