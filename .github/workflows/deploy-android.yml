@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - master
-    types: [synchronize, closed]
+    types: [opened, synchronize, closed]
 
   workflow_dispatch:
 
