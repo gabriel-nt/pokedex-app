@@ -1,0 +1,27 @@
+name: 'Version Label Checker'
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [reopened, labeled, unlabeled]
+
+jobs:
+  check_labels:
+    name: 'Check PR Labels'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to git repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Require a label
+        uses: mheap/github-action-required-labels@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          mode: exactly
+          count: 1
+          labels: 'major, minor, patch'
