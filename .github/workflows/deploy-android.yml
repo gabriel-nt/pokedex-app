@@ -83,6 +83,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: master
+          push_options: --force
           file_pattern: '*.gradle'
           commit_user_name: ${{ github.actor }}
           commit_user_email: ${{ github.actor }}@users.noreply.github.com
