@@ -4,23 +4,11 @@ on:
   pull_request:
     branches:
       - master
-    types: [opened, synchronize, closed]
+    types: [closed]
 
   workflow_dispatch:
 
 jobs:
-  extract_label:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == false
-
-    steps:
-      - name: Extract label version
-        run: |
-          VERSION=${{contains(github.event.pull_request.labels.*.name, 'major') == true && 'major' || contains(github.event.pull_request.labels.*.name, 'minor') == true && 'minor' || contains(github.event.pull_request.labels.*.name, 'patch') == true && 'patch'}}
-          echo ${VERSION}
-          echo "version=${VERSION}"
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-
   deploy:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
@@ -74,14 +62,8 @@ jobs:
       - name: Extract label version
         id: extract_label
         run: |
-          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'major') == true && 'major' }} 
-          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'minor') == true && 'minor'  }} 
-          VERSION=${{ contains(github.event.pull_request.labels.*.name, 'patch') }} == true && 'patch'
+          VERSION=${{contains(github.event.pull_request.labels.*.name, 'major') == true && 'major' || contains(github.event.pull_request.labels.*.name, 'minor') == true && 'minor' || contains(github.event.pull_request.labels.*.name, 'patch') == true && 'patch'}}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-
-      - name: Echo version
-        run: |
-          echo ${{ steps.extract_label.outputs.version }}
 
       - name: Build Android Release
         if: false
