@@ -4,10 +4,7 @@ on:
   pull_request:
     branches:
       - master
-    types:
-      - reopened
-      - labeled
-      - unlabeled
+    types: [opened, reopened, labeled, unlabeled]
 
 jobs:
   check_labels:

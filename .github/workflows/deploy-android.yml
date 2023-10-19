@@ -6,8 +6,6 @@ on:
       - master
     types: [closed]
 
-  workflow_dispatch:
-
 jobs:
   deploy:
     name: 'Deploy Android'
