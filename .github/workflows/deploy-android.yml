@@ -4,9 +4,21 @@ on:
   pull_request:
     branches:
       - master
-    types: [closed]
+    types: [opened, closed]
 
 jobs:
+  add_comment:
+    name: 'Add a comment to require a version label'
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == false
+
+    steps:
+      - name: Add comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: Please set a versioning label of either `major`, `minor`, or `patch` to the pull request.
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   deploy:
     name: 'Deploy Android'
     runs-on: ubuntu-latest
