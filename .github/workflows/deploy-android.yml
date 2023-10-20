@@ -132,7 +132,18 @@ jobs:
           VERSION=$(npm pkg get version | tr -d \")
           echo "version=v${VERSION}" >> $GITHUB_OUTPUT
 
-      - uses: ncipollo/release-action@v1
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: assets
+          path: ${{ github.workspace }}/android/app/build/outputs/bundle/release
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ${{ github.workspace }}/android/app/build/outputs/bundle/release
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
         with:
           artifacts: 'release.tar.gz,foo/*.txt'
           bodyFile: 'body.md'
