@@ -113,6 +113,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: Git config
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Extract label version
         id: extract_label
         run: |
