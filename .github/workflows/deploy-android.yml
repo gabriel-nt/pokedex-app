@@ -115,8 +115,8 @@ jobs:
 
       - name: Git config
         run: |
-          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
-          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Extract label version
         id: extract_label
