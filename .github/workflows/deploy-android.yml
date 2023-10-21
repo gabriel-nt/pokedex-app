@@ -150,8 +150,6 @@ jobs:
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: 'release.tar.gz,foo/*.txt'
-          bodyFile: 'body.md'
-          tag: ${{ steps.get_package_version.outputs.version }}
-          generateReleaseNotes: true
           draft: true
+          generateReleaseNotes: true
+          tag: ${{ steps.get_package_version.outputs.version }}
