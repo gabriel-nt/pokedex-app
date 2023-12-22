@@ -1,11 +1,10 @@
 import JailMonkey from 'jail-monkey';
+import { useEffect, useState } from 'react';
 import { Linking, Platform } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import * as S from './styles';
-
 import logoImg from '@/presentation/assets/images/logo.png';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useEffect, useState } from 'react';
 
 export const JailBreakPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -39,7 +38,7 @@ export const JailBreakPopup = () => {
             </S.Description>
 
             <S.ButtonWrapper>
-              <S.Button onPress={handleOpenSettings}>
+              <S.Button onPress={handleOpenSettings} testID="settings-button">
                 <S.ButtonText>Abrir configs</S.ButtonText>
               </S.Button>
             </S.ButtonWrapper>

@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFilter } from './hooks';
 import { Atoms } from './components';
 import { FilterModalProps } from './types';
-import { RadioButton, TextField } from '../index';
+import { RadioButton, TextField } from '@/presentation/components';
 
 import { defaultTheme } from '@/presentation/styles';
 import { GENERATION_OPTIONS } from '@/presentation/utils/constants';
@@ -40,6 +40,7 @@ export const FilterModal = ({
             style={{
               marginTop: 14
             }}
+            testID="pokemon_name"
             value={pokemonName}
             variant="standard"
             label="Pokemon Name"

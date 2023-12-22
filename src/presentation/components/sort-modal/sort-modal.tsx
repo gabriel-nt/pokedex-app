@@ -1,16 +1,13 @@
 import * as S from './styles';
 
+import { SortModalProps } from './types';
+import { AnimatedSortOption } from './components';
+
+import { SortOption } from '@/presentation/types';
 import { usePokemonsStore } from '@/presentation/stores';
 import { SORT_OPTIONS } from '@/presentation/utils/constants';
-import { AnimatedSortOption } from './animated-sort-option/animated-sort-option';
-import { SortOption } from '@/presentation/types';
 
-interface SortModalProps {
-  isVisible: boolean;
-  onClose: () => void;
-}
-
-export const SortModal = ({ isVisible, onClose }: SortModalProps) => {
+export const SortModal = ({ isVisible, onClose }: SortModalProps.Default) => {
   const { sort, updateSort } = usePokemonsStore();
 
   function handleSortPokemons(option: SortOption) {
