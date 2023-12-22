@@ -20,10 +20,7 @@ export const RadioButton = ({
   const theme = useTheme();
 
   function handlePress() {
-    if (disabled) {
-      return null;
-    }
-    if (onPress) {
+    if (!disabled && onPress) {
       onPress(id);
     }
   }
@@ -42,7 +39,7 @@ export const RadioButton = ({
           <S.RadioIcon
             size={size}
             borderSize={borderSize}
-            color={selected ? theme.backgrounds.purple : borderColor}
+            color={theme.backgrounds.purple}
           />
         )}
       </S.InputRadio>

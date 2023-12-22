@@ -1,25 +1,21 @@
-import { useState } from 'react';
+import { SortModal } from '@/presentation/components';
+import logoImg from '@/presentation/assets/images/logo.png';
 
 import * as S from './styles';
-
-import logoImg from '@/presentation/assets/images/logo.png';
-import { FilterModal, SortModal } from '@/presentation/components';
+import { FilterModal } from '../filter-modal';
+import { useHeader } from './hooks';
 
 export const Header = () => {
-  const [isSortModalVisible, setIsSortModalVisible] = useState(false);
-  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-
-  const toggleFilterModal = () => {
-    setIsFilterModalVisible(prevState => !prevState);
-  };
-
-  const toggleSortModal = () => {
-    setIsSortModalVisible(prevState => !prevState);
-  };
+  const {
+    toggleSortModal,
+    toggleFilterModal,
+    isSortModalVisible,
+    isFilterModalVisible
+  } = useHeader();
 
   return (
     <S.Root>
-      <S.LogoImage source={logoImg} />
+      <S.LogoImage source={logoImg} testID="logo_image" />
 
       <S.MenuOptionsWrapper>
         <S.MenuOptionBox>

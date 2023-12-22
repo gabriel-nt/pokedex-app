@@ -4,7 +4,7 @@ import {
   GraphQLResponse
 } from '@/application/protocols/graphql';
 
-import { ApolloClient, InMemoryCache, ApolloError, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloError } from '@apollo/client';
 
 export class ApolloGraphQLClient implements GraphQLClient {
   client: ApolloClient<any>;
@@ -29,9 +29,9 @@ export class ApolloGraphQLClient implements GraphQLClient {
     }
 
     return {
-      data: response.data,
-      error: response.error,
-      loading: response.loading
+      data: response?.data,
+      error: response?.error,
+      loading: response?.loading
     };
   }
 }

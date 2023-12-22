@@ -2,7 +2,7 @@ import * as S from './styles';
 import { PokemonDetailBottomSheetProps } from '../../types';
 
 import { BADGE_IMAGES } from '@/presentation/utils/constants';
-import { useBottomSheet } from '@/presentation/hooks/use-bottom-sheet/use-bottom-sheet';
+import { useBottomSheet } from '@/presentation/hooks/use-bottom-sheet';
 
 export const Header = ({
   id,
@@ -14,7 +14,11 @@ export const Header = ({
   return (
     <S.Root>
       <S.HeadingWrapper>
-        <S.GoBackIcon name="keyboard-backspace" onPress={collapse} />
+        <S.GoBackIcon
+          testID="close-bottom-sheet"
+          name="keyboard-backspace"
+          onPress={collapse}
+        />
         <S.Title>{name}</S.Title>
         <S.Subtitle>#{String(id).padStart(4, '0')}</S.Subtitle>
       </S.HeadingWrapper>
