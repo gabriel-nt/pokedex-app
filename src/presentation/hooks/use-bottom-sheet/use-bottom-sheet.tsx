@@ -4,7 +4,7 @@ import { BottomSheetContext } from '@/presentation/contexts';
 export const useBottomSheet = () => {
   const context = useContext(BottomSheetContext);
 
-  if (!context) {
+  if (!context || !Object.keys(context).length) {
     throw new Error('useBottomSheet must be used within BottomSheetProvider');
   }
 

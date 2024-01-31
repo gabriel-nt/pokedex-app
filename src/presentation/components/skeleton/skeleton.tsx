@@ -29,7 +29,11 @@ export const Skeleton = ({
   });
 
   return (
-    <S.Wrapper height={height} width={width} isRounded={variant === 'rounded'}>
+    <S.Wrapper
+      width={width}
+      height={height}
+      testID="skeleton"
+      isRounded={variant.includes('rounded')}>
       <S.LinearGradientAnimated
         colors={['#a0a0a0', '#b0b0b0', '#b0b0b0', '#a0a0a0']}
         start={{ x: 0, y: 0 }}

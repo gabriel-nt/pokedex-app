@@ -16,12 +16,3 @@ export type RadioButtonProps = {
   testID?: string;
   value?: string;
 };
-
-export type RadioGroupProps = {
-  containerStyle?: StyleProp<ViewStyle>;
-  layout?: 'row' | 'column';
-  onPress?: (selectedId: string) => void;
-  radioButtons: RadioButtonProps[];
-  selectedId?: string;
-  testID?: string;
-};

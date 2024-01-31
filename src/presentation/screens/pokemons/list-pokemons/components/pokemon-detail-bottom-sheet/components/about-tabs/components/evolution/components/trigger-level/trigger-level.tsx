@@ -10,7 +10,7 @@ export const TriggerLevel = ({
     <S.Level>
       {level
         ? `Lvl ${level}`
-        : trigger !== undefined
+        : trigger
         ? `Use ${trigger}`
         : ' Undefined Trigger'}
     </S.Level>

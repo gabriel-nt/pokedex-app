@@ -1,6 +1,5 @@
 import { styled } from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const Modal = styled.Modal``;
 
@@ -57,10 +56,4 @@ export const ButtonText = styled.Text`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.white};
   font-family: ${({ theme }) => theme.fonts.openSans[600]};
-`;
-
-export const BlockIcon = styled(MaterialCommunityIcons)`
-  padding: 4px;
-  font-size: 24px;
-  color: ${({ theme }) => theme.colors.dark};
 `;

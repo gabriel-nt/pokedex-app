@@ -7,13 +7,13 @@ export const Footer = ({
 }: FilterModalProps.Components.Footer) => (
   <S.Root>
     <S.CancelButtonWrapper>
-      <S.CancelButton onPress={onClose}>
+      <S.CancelButton testID="close-btn" onPress={onClose}>
         <S.CancelButtonText>Close</S.CancelButtonText>
       </S.CancelButton>
     </S.CancelButtonWrapper>
 
     <S.SubmitButtonWrapper>
-      <S.SubmitButton onPress={onSubmit}>
+      <S.SubmitButton testID="apply-btn" onPress={onSubmit}>
         <S.SubmitButtonText>Apply</S.SubmitButtonText>
       </S.SubmitButton>
     </S.SubmitButtonWrapper>

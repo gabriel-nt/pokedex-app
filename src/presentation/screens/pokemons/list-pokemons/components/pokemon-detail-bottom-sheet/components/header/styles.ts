@@ -14,8 +14,8 @@ export const HeadingWrapper = styled.View`
 `;
 
 export const GoBackIcon = styled(MaterialCommunityIcons)`
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   font-size: 26px;
   position: absolute;
   color: ${({ theme }) => theme.colors.white};
@@ -29,8 +29,8 @@ export const Title = styled.Text`
 `;
 
 export const Subtitle = styled.Text`
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
   font-size: 24px;
   position: absolute;
   letter-spacing: -1px;
