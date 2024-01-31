@@ -20,6 +20,7 @@ export const Header = () => {
       <S.MenuOptionsWrapper>
         <S.MenuOptionBox>
           <S.SortIcon
+            testID="sort-button"
             name="sort-alphabetical-ascending"
             onPress={toggleSortModal}
           />
@@ -28,7 +29,11 @@ export const Header = () => {
 
         <S.MenuOptionBox>
           <S.FilterBadge />
-          <S.FilterIcon name="filter" onPress={toggleFilterModal} />
+          <S.FilterIcon
+            name="filter"
+            testID="filter-button"
+            onPress={toggleFilterModal}
+          />
           <FilterModal
             isVisible={isFilterModalVisible}
             onClose={toggleFilterModal}

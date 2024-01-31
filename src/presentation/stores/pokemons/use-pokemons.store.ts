@@ -54,8 +54,6 @@ export const usePokemonsStore = create<PokemonsStore>((set, get) => ({
 
     const asyncStorage = makeAsyncStorageAdapter();
 
-    await asyncStorage.clear();
-
     const storageData = await asyncStorage.get<PokemonsStore['pokemons']>(
       `pokemons-storage-${generation}`
     );
